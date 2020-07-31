@@ -179,9 +179,12 @@ print(m.narisi_polje())
 print(m.ladjice[0].polja)
 print(m.ladjice[1].polja)
 
+'''
 m.streljaj(0, 5)
 m.streljaj(1, 5)
 print(m.streljaj(2, 5))
 print(m.streljaj(3, 5))
 
 print(m.narisi_polje())
+
+'''
