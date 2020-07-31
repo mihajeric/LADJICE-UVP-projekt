@@ -1,12 +1,21 @@
 
 import math
+import copy
 
 PRAZNO = ' '
 LADJICA = '#'
+LADJICA_POTOPLJENA = '@'
 NEZNANO = '?'
 
 ERROR = 'error'
+ZMAGA = 'zmaga'
+KONEC_POSTAVLJANJA = 'konec_postavljanja'
 
+
+class Ladjica():
+    def __init__(self):
+        self.polja = []
+    
 
 
 class Mreza():
@@ -15,10 +24,14 @@ class Mreza():
         self.mreza = [[PRAZNO for i in range(self.velikost)] for i in range(self.velikost)]
         self.poizkusi = [[False for i in range(self.velikost)] for i in range(self.velikost)]
         self.dolzine_ladjic = [0, 0, 1, 2, 1, 1] # stevilo ladjic posamezne dolžine, ki se jih lahko postavi
+
+        self.ladjice = []
 	
     def postavi_ladjico(self, dolzina, usmerjenost, y, x): 
         if self.dolzine_ladjic[dolzina] <= 0:
             return ERROR
+        
+        nova_ladjica = Ladjica()
         
         if usmerjenost == 'v':
             x = x
@@ -49,6 +62,7 @@ class Mreza():
                 else:
                     for i in range(y_gor, y_dol + 1):
                         self.mreza[i][x] = LADJICA
+                        nova_ladjica.polja.append([i, x])
             else:
                 return ERROR
 
@@ -82,25 +96,60 @@ class Mreza():
                 else:
                     for i in range(x_levo, x_desno + 1):
                         self.mreza[y][i] = LADJICA
+                        nova_ladjica.polja.append([y, i])
 
             else:
                 return ERROR
         
         self.dolzine_ladjic[dolzina] -= 1
+        self.ladjice.append(nova_ladjica)
+
+        if sum(self.dolzine_ladjic) == 0:
+            return KONEC_POSTAVLJANJA
     
     def streljaj(self, y, x):
         self.poizkusi[y][x] = True
 
+        zmaga = True
+        for ladjica in self.ladjice:
+            potopljena = True
+            for polje in ladjica.polja:
+                if self.poizkusi[polje[0]][polje[1]] == False:
+                    potopljena = False
+                    break
+
+            if not potopljena:
+                zmaga = False
+        
+        if zmaga:
+            return ZMAGA
+        else:
+            return
+
+
     
     def narisi_polje(self):
+        mreza = copy.deepcopy(self.mreza)
+
+        for ladjica in self.ladjice:
+            potopljena = True
+            for polje in ladjica.polja:
+                if self.poizkusi[polje[0]][polje[1]] == False:
+                    potopljena = False
+                    break
+            if potopljena:
+                for polje in ladjica.polja:
+                    mreza[polje[0]][polje[1]] = LADJICA_POTOPLJENA
+
         s = ''
         for y in range(len(self.mreza)):
             for x in range(len(self.mreza[y])):
                 if self.poizkusi[y][x] == True:
-                    s += self.mreza[y][x]
+                    s += mreza[y][x]
                 else:
                     s += NEZNANO
             s += '\n'
+
         return s
 
 
@@ -123,4 +172,16 @@ print(m.narisi_polje())
 m.streljaj(5, 4)
 print(m.narisi_polje())
 m.streljaj(4, 5)
+print(m.narisi_polje())
+m.streljaj(5, 6)
+print(m.narisi_polje())
+
+print(m.ladjice[0].polja)
+print(m.ladjice[1].polja)
+
+m.streljaj(0, 5)
+m.streljaj(1, 5)
+print(m.streljaj(2, 5))
+print(m.streljaj(3, 5))
+
 print(m.narisi_polje())
