@@ -162,8 +162,9 @@ class Mreza():
             s += '\n'
         return s
 
-
+'''
 m = Mreza()
+
 print(m.postavi_ladjico(3, 'h', 5, 5))
 print(m.postavi_ladjico(4, 'v', 1, 5))
 
@@ -173,11 +174,13 @@ m.streljaj(5, 4)
 print(m.narisi_polje())
 m.streljaj(4, 5)
 print(m.narisi_polje())
-m.streljaj(5, 6)
-print(m.narisi_polje())
+#m.streljaj(5, 6)
+#print(m.narisi_polje())
 
-print(m.ladjice[0].polja)
-print(m.ladjice[1].polja)
+#print(m.ladjice[0].polja)
+#print(m.ladjice[1].polja)
+'''
+
 
 '''
 m.streljaj(0, 5)
@@ -188,3 +191,9 @@ print(m.streljaj(3, 5))
 print(m.narisi_polje())
 
 '''
+
+m = Mreza()
+
+print(m.postavi_ladjico(3, 'h', 9, 5))
+
+m.streljaj(9,5)
