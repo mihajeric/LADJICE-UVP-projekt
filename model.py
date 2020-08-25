@@ -2,6 +2,8 @@
 import math
 import copy
 
+import avtomatsko_igranje_bot
+
 PRAZNO = ' '
 LADJICA = '#'
 LADJICA_POTOPLJENA = '@'
@@ -9,6 +11,7 @@ NEZNANO = '?'
 
 ERROR = 'error'
 ZMAGA = 'zmaga'
+PORAZ = 'poraz'
 KONEC_POSTAVLJANJA = 'konec_postavljanja'
 
 
@@ -151,6 +154,13 @@ class Mreza():
             s += '\n'
 
         return s
+    
+    def polja_1d(self):
+        izrisano = self.narisi_polje()
+        tabela = []
+        for vrstica in izrisano.split('\n')[:-1]:
+            tabela.extend(list(vrstica))
+        return tabela
 
 
     
@@ -162,38 +172,23 @@ class Mreza():
             s += '\n'
         return s
 
-'''
-m = Mreza()
 
-print(m.postavi_ladjico(3, 'h', 5, 5))
-print(m.postavi_ladjico(4, 'v', 1, 5))
+class Igra():
+    def nova_igra(self):
+        self.mreza_igralec = Mreza()
+        self.mreza_racunalnik = Mreza()
+        avtomatsko_igranje_bot.postavi_ladjice(self.mreza_racunalnik)
+    
+    def postavi_ladjico(self, dolzina, usmerjenost, y, x): 
+        return self.mreza_igralec.postavi_ladjico(dolzina, usmerjenost, y, x)
+    
+    def streljaj(self, y, x):
+        rezultat = self.mreza_racunalnik.streljaj(y, x)
+        if rezultat == ZMAGA:
+            return ZMAGA
+        
+        p = avtomatsko_igranje_bot.naslednja_poteza(self.mreza_igralec)
+        poraz = (self.mreza_igralec.streljaj(p[0], p[1]) == ZMAGA)
 
-m.streljaj(5, 5)
-print(m.narisi_polje())
-m.streljaj(5, 4)
-print(m.narisi_polje())
-m.streljaj(4, 5)
-print(m.narisi_polje())
-#m.streljaj(5, 6)
-#print(m.narisi_polje())
-
-#print(m.ladjice[0].polja)
-#print(m.ladjice[1].polja)
-'''
-
-
-'''
-m.streljaj(0, 5)
-m.streljaj(1, 5)
-print(m.streljaj(2, 5))
-print(m.streljaj(3, 5))
-
-print(m.narisi_polje())
-
-'''
-
-m = Mreza()
-
-print(m.postavi_ladjico(3, 'h', 9, 5))
-
-m.streljaj(9,5)
+        if poraz:
+            return PORAZ
