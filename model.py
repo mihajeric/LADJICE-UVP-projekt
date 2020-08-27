@@ -191,6 +191,7 @@ class Igra():
         self.rezultat_poteze = None
 
     def nova_igra(self):
+        self.__init__()
         avtomatsko_igranje_bot.postavi_ladjice(self.mreza_racunalnik)
 
     def postavi_ladjico(self, dolzina, usmerjenost, y, x):
