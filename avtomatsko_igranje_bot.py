@@ -1,14 +1,12 @@
 import random
+from time import sleep
 
 import model
 
-from time import sleep
 
 def naslednja_poteza(m):
     koordinate = [0, 0]
-
     izrisano = m.narisi_polje()
-
     tabela = []
     for vrstica in izrisano.split('\n')[:-1]:
         tabela.append(list(vrstica))
@@ -26,11 +24,10 @@ def naslednja_poteza(m):
                     tabela[y][x - 1] = model.PRAZNO
                 if x < len(vrstica) - 1 and tabela[y][x + 1] != model.LADJICA_POTOPLJENA:
                     tabela[y][x + 1] = model.PRAZNO
-    
+
     potencialne_koordinate = []
 
-    # iskanje še neznanih polj zraven nepotopljenih ladjic
-
+    # iskanje se neznanih polj zraven nepotopljenih ladjic
     for y in range(len(tabela)):
         vrstica = tabela[y]
         for x in range(len(vrstica)):
@@ -44,24 +41,20 @@ def naslednja_poteza(m):
                     potencialne_koordinate.append([y, x - 1])
                 if x < len(vrstica) - 1 and tabela[y][x + 1] == model.NEZNANO:
                     potencialne_koordinate.append([y, x + 1])
-    
 
     if len(potencialne_koordinate) > 0:
         koordinate = random.choice(potencialne_koordinate)
     else:
-        # naključno streljanje
-
+        # nakljucno streljanje
         smiselna = False
         while not smiselna:
             y = random.randint(0, m.velikost - 1)
             x = random.randint(0, m.velikost - 1)
             if tabela[y][x] == model.NEZNANO:
                 smiselna = True
-        
         koordinate = [y, x]
 
     return koordinate
-
 
 def postavi_ladjice(m):
     for dolzina in range(len(m.dolzine_ladjic) - 1, 0, -1):
@@ -74,14 +67,12 @@ def postavi_ladjice(m):
 
     return m
 
-
-
 def main():
     m = model.Mreza()
     postavi_ladjice(m)
     print(m)
     sleep(1)
-    
+
     zmaga = False
     i = 1
     while not zmaga:

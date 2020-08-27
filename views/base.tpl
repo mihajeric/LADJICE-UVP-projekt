@@ -17,8 +17,10 @@
         .mreza {
             width: 45vw;
             height: 45vw;
+            max-width: 50vh;
+            max-height: 50vh;
             display: block;
-        background-color: #aaa;
+            background-color: #aaa;
             display:inline-block;
             font-size: 0;
         }
@@ -44,27 +46,17 @@
         .polje-prazno {
             background-color: rgb(102, 102, 255);
         }
+
+        .vsebina {
+            max-width: 110vh;
+            margin: auto;
+        }
     </style>
     <title>Ladjice</title>
 </head>
 <body>
-    <div class="igra">
-        <div class="mreza">
-            <a href="" class="polje"></a>
-            <a href="" class="polje"></a>
-            <a href="" class="polje polje-neznano"></a>
-            <a href="" class="polje polje-ladjica-potopljena"></a>
-            <a href="" class="polje polje-ladjica"></a>
-            <a href="" class="polje polje-prazno"></a>
-            <a href="" class="polje"></a>
-            <a href="" class="polje"></a>
-            <a href="" class="polje"></a>
-            <a href="" class="polje"></a>
-        </div>
-        <div class="mreza">
-            <a href="" class="polje"></a>
-        </div>
+    <div class="text-center vsebina">
+        {{!base}}
     </div>
-    
 </body>
 </html>

@@ -1,65 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <style>
+% import model
+% rebase('base.tpl')
 
-        .igra {
-            margin:auto;
-            margin-top: 1em;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content:space-evenly;
-        }
-        .mreza {
-            width: 45vw;
-            height: 45vw;
-            display: block;
-        background-color: #aaa;
-            display:inline-block;
-            font-size: 0;
-        }
+<form action="./polje" method="post">
 
-        .polje {
-            width: 10%;
-            height: 10%;
-            background-color: #aaa;
-            display:inline-block;
-            border: 1px solid #333;
-            margin: 0px;
-        }
+    <h1 class="title">Ladjice</h1>
 
-        .polje-neznano {
-            background-color: #aaa;
-        }
-        .polje-ladjica {
-            background-color: rgb(255, 174, 0);
-        }
-        .polje-ladjica-potopljena {
-            background-color: rgb(163, 0, 0);
-        }
-        .polje-prazno {
-            background-color: rgb(102, 102, 255);
-        }
-    </style>
-    <title>Ladjice</title>
-</head>
-<body>
+    <p>
+    % if faza == model.POSTAVLJANJE:
+        Izberi dolžino in orientacijo ladjice, potem pa jo s klikom na polje postavi
+    % elif faza == model.STRELJANJE:
+        Klikni na polje, kamor želiš streljati (na desni mreži)
+    %elif faza == model.KONEC:
+        Konec igre!
+    % end
+    <p>
+
+
+    % if faza == model.POSTAVLJANJE:
+        <div class="container">
+            <div class="form-group">
+                <label for="dolzina">Dolžina ladjice</label>
+                <select class="form-control" id="dolzina" name="dolzina">
+                    % for (dolzina, stevilo) in enumerate(dolzine_ladjic):
+                        % if stevilo != 0:
+                            <option {{"selected" if izbrana_dolzina==dolzina else ""}}>{{dolzina}}</option>
+                        % end
+                    % end
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="orinetacija">Orientacija ladjice</label>
+                <select class="form-control" id="orinetacija" name="orinetacija">
+                    <option value="v" {{"selected" if izbrana_usmerjenost=="v" else ""}}>Vertikalna</option>
+                    <option value="h" {{"selected" if izbrana_usmerjenost=="h" else ""}}>Horizontalna</option>
+                </select>
+            </div>
+        </div>
+
+        % if rezultat_poteze == model.ERROR:
+            <h3>Neveljavna postavitev!</h3>
+        % end
+
+    % elif faza == model.KONEC:
+        % if rezultat_poteze == model.ZMAGA:
+            <h3>Zmagal si!</h3>
+        % else:
+            <h3>Izgubil si.</h3>
+        % end
+        <a href="./" class="btn btn-primary">Nazaj na začetek</a>
+
+    % end
+
+
+    <!--      Izris igralnih polj     -->
+
     <div class="igra">
         <div class="mreza">
-            % for (indeks, polje) in enumerate(mreza_igralec):
-               <a href="./polje/{{indeks}}" class="polje {{tipi_polj[polje]}}"></a>
+            % for (indeks, polje) in enumerate(mreza_igralec_odkrita if faza == model.POSTAVLJANJE else mreza_igralec):
+                % if faza == model.POSTAVLJANJE:
+                    <input type="submit" name="polje" value="{{indeks}}" class="polje {{tipi_polj[polje]}}">
+                % else:
+                    <span class="polje {{tipi_polj[polje]}}"></span>
+                % end
             % end
         </div>
-        <div class="mreza">
-            % for (indeks, polje) in enumerate(mreza_racunalnik):
-               <a href="./polje/{{indeks}}" class="polje {{tipi_polj[polje]}}"></a>
-            % end
-        </div>
+
+        % if faza != model.POSTAVLJANJE:
+            <div class="mreza">
+                % for (indeks, polje) in enumerate(mreza_racunalnik):
+                    <input type="submit" name="polje" value="{{indeks}}" class="polje {{tipi_polj[polje]}}">
+                % end
+            </div>
+        % end
     </div>
-    
-</body>
-</html>
+</form>
